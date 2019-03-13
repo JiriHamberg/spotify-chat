@@ -1,14 +1,12 @@
-package spotify_chat
+package spotify_chat.controller
 
 import org.springframework.beans.factory.annotation.Autowired
-import org.springframework.web.bind.annotation.GetMapping
-import org.springframework.web.bind.annotation.RequestMapping
-import org.springframework.web.bind.annotation.RequestParam
-import org.springframework.web.bind.annotation.RestController
+import org.springframework.web.bind.annotation.*
 import spotify_chat.service.SpotifyService
 
 
 @RestController
+@CrossOrigin(origins = ["\${spotify_chat.frontend.url}"])
 @RequestMapping("search")
 class SearchController {
 

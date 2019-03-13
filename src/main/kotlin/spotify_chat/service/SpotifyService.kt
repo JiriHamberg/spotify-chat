@@ -7,6 +7,7 @@ import org.springframework.beans.factory.annotation.Value
 import java.net.URI
 import com.wrapper.spotify.model_objects.specification.Paging
 import com.wrapper.spotify.model_objects.specification.Track
+import com.wrapper.spotify.model_objects.specification.User
 import org.slf4j.Logger
 import org.slf4j.LoggerFactory
 import org.springframework.stereotype.Component
@@ -77,6 +78,16 @@ class SpotifyService {
         return authorizationCodeUriRequest.execute()
     }
 
+
+    fun getProfile(accessToken: String): User {
+        val client = SpotifyApi.builder()
+            .setClientId(clientId)
+            .setClientSecret(clientSecret)
+            .setAccessToken(accessToken)
+            .build()
+
+        return client.currentUsersProfile.build().execute()
+    }
 
     fun getUserAccessToken(code: String): AuthorizationCodeCredentials {
         val userAccessTokenRequest = spotifyApi.authorizationCode(code)

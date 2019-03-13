@@ -1,10 +1,11 @@
-package spotify_chat
+package spotify_chat.controller
 
 import org.springframework.beans.factory.annotation.Autowired
 import org.springframework.web.bind.annotation.*
 import spotify_chat.service.SpotifyService
 
 @RestController
+@CrossOrigin(origins = ["\${spotify_chat.frontend.url}"])
 @RequestMapping("album")
 class AlbumController {
 
