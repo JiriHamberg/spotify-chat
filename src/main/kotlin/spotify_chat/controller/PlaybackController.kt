@@ -14,7 +14,7 @@ import spotify_chat.session.SpotifySession
 import javax.servlet.http.HttpServletRequest
 
 @RestController
-@CrossOrigin(origins = ["\${spotify_chat.frontend.url}"])
+@CrossOrigin(origins = ["\${spotify_chat.frontend.url}"], allowCredentials = "true")
 @RequestMapping("playback")
 class PlaybackController {
 

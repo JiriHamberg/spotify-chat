@@ -12,7 +12,7 @@ import spotify_chat.session.SpotifySession
 
 
 @RestController
-@CrossOrigin(origins = ["\${spotify_chat.frontend.url}"])
+@CrossOrigin(origins = ["\${spotify_chat.frontend.url}"], allowCredentials = "true")
 @RequestMapping("user")
 class UserController {
 

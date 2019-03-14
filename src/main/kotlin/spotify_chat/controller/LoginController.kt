@@ -15,7 +15,7 @@ import javax.servlet.http.HttpSession
 
 
 @RestController
-@CrossOrigin(origins = ["\${spotify_chat.frontend.url}"])
+@CrossOrigin(origins = ["\${spotify_chat.frontend.url}"], allowCredentials = "true" )
 class LoginController {
 
     @Autowired
