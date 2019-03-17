@@ -53,9 +53,9 @@ class SpotifyService {
     }
 
 
-    fun findTracks(name: String): Paging<Track> {
+    fun findTracks(name: String, trackCount: Int): Paging<Track> {
         val request = spotifyApi.searchTracks(name)
-            .limit(5)
+            .limit(trackCount)
             .build()
 
         return request.execute()

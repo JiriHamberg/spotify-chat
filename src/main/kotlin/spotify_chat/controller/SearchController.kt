@@ -6,7 +6,7 @@ import spotify_chat.service.SpotifyService
 
 
 @RestController
-@CrossOrigin(origins = ["\${spotify_chat.frontend.url}"])
+@CrossOrigin(origins = ["\${spotify_chat.frontend.url}"], allowCredentials = "true")
 @RequestMapping("search")
 class SearchController {
 
@@ -14,7 +14,9 @@ class SearchController {
     lateinit var spotifyService: SpotifyService
 
     @GetMapping("track")
-    fun greeting(@RequestParam(value = "name", required = true) name: String) = spotifyService.findTracks(name)
+    fun searchTracks(@RequestParam(value = "name", required = true) name: String,
+                     @RequestParam(value = "count", required = false, defaultValue = "25") count: Int) =
+        spotifyService.findTracks(name, count)
 
 
 }
