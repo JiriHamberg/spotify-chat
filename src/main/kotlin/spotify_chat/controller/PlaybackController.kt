@@ -5,10 +5,8 @@ import org.slf4j.LoggerFactory
 import org.springframework.beans.factory.annotation.Autowired
 import org.springframework.http.HttpStatus
 import org.springframework.http.ResponseEntity
-import org.springframework.web.bind.annotation.CrossOrigin
-import org.springframework.web.bind.annotation.PutMapping
-import org.springframework.web.bind.annotation.RequestMapping;
-import org.springframework.web.bind.annotation.RestController;
+import org.springframework.web.bind.annotation.*
+import spotify_chat.domain.PlaybackMessage
 import spotify_chat.service.SpotifyService
 import spotify_chat.session.SpotifySession
 import javax.servlet.http.HttpServletRequest
@@ -37,5 +35,19 @@ class PlaybackController {
 
         return ResponseEntity("Playback paused", HttpStatus.OK)
     }
+
+    @PutMapping("play/track/{trackUri}")
+    fun playTrack(@PathVariable(value = "trackUri") trackUri: String): ResponseEntity<PlaybackMessage> {
+        val accessToken =
+                spotifySession.spotifyAccessToken ?: return ResponseEntity(PlaybackMessage("Unauthorized"), HttpStatus.UNAUTHORIZED)
+
+        spotifyService.playTrack(accessToken, trackUri)
+
+        return ResponseEntity(PlaybackMessage("Playing track $trackUri"), HttpStatus.OK)
+    }
+
+
+
+
 
 }
