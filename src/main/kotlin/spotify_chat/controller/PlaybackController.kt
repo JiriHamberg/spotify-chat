@@ -6,6 +6,7 @@ import org.springframework.beans.factory.annotation.Autowired
 import org.springframework.http.HttpStatus
 import org.springframework.http.ResponseEntity
 import org.springframework.web.bind.annotation.*
+import spotify_chat.domain.PlayTrack
 import spotify_chat.domain.PlaybackMessage
 import spotify_chat.service.SpotifyService
 import spotify_chat.session.SpotifySession
@@ -36,10 +37,12 @@ class PlaybackController {
         return ResponseEntity("Playback paused", HttpStatus.OK)
     }
 
-    @PutMapping("play/track/{trackUri}")
-    fun playTrack(@PathVariable(value = "trackUri") trackUri: String): ResponseEntity<PlaybackMessage> {
+    @PutMapping("play/track")
+    fun playTrack(@RequestBody playRequest: PlayTrack): ResponseEntity<PlaybackMessage> {
         val accessToken =
                 spotifySession.spotifyAccessToken ?: return ResponseEntity(PlaybackMessage("Unauthorized"), HttpStatus.UNAUTHORIZED)
+
+        val trackUri = playRequest.trackUri
 
         spotifyService.playTrack(accessToken, trackUri)
 

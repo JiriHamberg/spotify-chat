@@ -1,5 +1,6 @@
 package spotify_chat.service
 
+import com.google.gson.JsonArray
 import com.wrapper.spotify.SpotifyApi
 import com.wrapper.spotify.model_objects.credentials.AuthorizationCodeCredentials
 import com.wrapper.spotify.model_objects.specification.Album
@@ -131,9 +132,11 @@ class SpotifyService {
             .setAccessToken(accessToken)
             .build()
 
+        val trackUris = JsonArray()
+        trackUris.add(trackUri)
 
         val setPlaybackRequest = client.startResumeUsersPlayback()
-            .context_uri(trackUri)
+            .uris(trackUris)
             .build()
 
         setPlaybackRequest.execute()
