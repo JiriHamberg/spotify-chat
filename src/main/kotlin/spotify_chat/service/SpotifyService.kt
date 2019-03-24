@@ -3,6 +3,7 @@ package spotify_chat.service
 import com.google.gson.JsonArray
 import com.wrapper.spotify.SpotifyApi
 import com.wrapper.spotify.model_objects.credentials.AuthorizationCodeCredentials
+import com.wrapper.spotify.model_objects.miscellaneous.CurrentlyPlaying
 import com.wrapper.spotify.model_objects.specification.Album
 import org.springframework.beans.factory.annotation.Value
 import java.net.URI
@@ -140,6 +141,19 @@ class SpotifyService {
             .build()
 
         setPlaybackRequest.execute()
+    }
+
+
+    fun getCurrentlyPlaying(accessToken: String): CurrentlyPlaying {
+        val client = SpotifyApi.builder()
+            .setClientId(clientId)
+            .setClientSecret(clientSecret)
+            .setAccessToken(accessToken)
+            .build()
+
+        return client.usersCurrentlyPlayingTrack
+            .build()
+            .execute()
     }
 
 }

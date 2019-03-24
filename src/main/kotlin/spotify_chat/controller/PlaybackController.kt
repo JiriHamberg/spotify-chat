@@ -6,6 +6,7 @@ import org.springframework.beans.factory.annotation.Autowired
 import org.springframework.http.HttpStatus
 import org.springframework.http.ResponseEntity
 import org.springframework.web.bind.annotation.*
+import spotify_chat.domain.GenericErrorMessage
 import spotify_chat.domain.PlayTrack
 import spotify_chat.domain.PlaybackMessage
 import spotify_chat.service.SpotifyService
@@ -26,10 +27,20 @@ class PlaybackController {
     private val logger = LoggerFactory.getLogger(PlaybackController::class.java)
 
 
+    @GetMapping("state")
+    fun getCurrentlyPlaying(): ResponseEntity<*> {
+        val accessToken =
+            spotifySession.spotifyAccessToken ?: return ResponseEntity(GenericErrorMessage("Access token not found"), HttpStatus.UNAUTHORIZED)
+
+        val currentlyPlaying = spotifyService.getCurrentlyPlaying(accessToken)
+
+        return ResponseEntity(currentlyPlaying, HttpStatus.OK)
+    }
+
     @PutMapping("pause")
     fun pausePlayback(request: HttpServletRequest): ResponseEntity<*> {
         val accessToken =
-            spotifySession.spotifyAccessToken ?: return ResponseEntity("Access token not found", HttpStatus.UNAUTHORIZED)
+            spotifySession.spotifyAccessToken ?: return ResponseEntity(GenericErrorMessage("Access token not found"), HttpStatus.UNAUTHORIZED)
 
 
         spotifyService.pausePlayback(accessToken)
