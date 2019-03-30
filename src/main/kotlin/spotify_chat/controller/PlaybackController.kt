@@ -48,6 +48,19 @@ class PlaybackController {
         return ResponseEntity("Playback paused", HttpStatus.OK)
     }
 
+    @PutMapping("resume")
+    fun resumePlayback(request: HttpServletRequest): ResponseEntity<*> {
+        val accessToken =
+            spotifySession.spotifyAccessToken ?: return ResponseEntity(GenericErrorMessage("Access token not found"), HttpStatus.UNAUTHORIZED)
+
+
+        spotifyService.resumePlayback(accessToken)
+
+        return ResponseEntity("Playback paused", HttpStatus.OK)
+    }
+
+
+
     @PutMapping("play/track")
     fun playTrack(@RequestBody playRequest: PlayTrack): ResponseEntity<PlaybackMessage> {
         val accessToken =

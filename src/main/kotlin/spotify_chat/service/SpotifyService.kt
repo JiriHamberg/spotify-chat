@@ -126,6 +126,20 @@ class SpotifyService {
     }
 
 
+    fun resumePlayback(accessToken: String) {
+        val client = SpotifyApi.builder()
+            .setClientId(clientId)
+            .setClientSecret(clientSecret)
+            .setAccessToken(accessToken)
+            .build()
+
+        val setPlaybackRequest = client.startResumeUsersPlayback()
+            .build()
+
+        setPlaybackRequest.execute()
+    }
+
+
     fun playTrack(accessToken: String, trackUri: String) {
         val client = SpotifyApi.builder()
             .setClientId(clientId)
