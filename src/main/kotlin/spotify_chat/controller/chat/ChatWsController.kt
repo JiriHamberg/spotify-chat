@@ -1,0 +1,32 @@
+package spotify_chat.controller.chat
+
+import org.slf4j.Logger
+import org.slf4j.LoggerFactory
+import org.springframework.beans.factory.annotation.Autowired
+import org.springframework.messaging.handler.annotation.MessageMapping
+import org.springframework.messaging.handler.annotation.Payload
+import org.springframework.messaging.handler.annotation.SendTo
+import org.springframework.security.core.Authentication
+import org.springframework.stereotype.Controller
+import spotify_chat.domain.chat.ChatMessage
+import spotify_chat.domain.chat.ChatMessageOutput
+import spotify_chat.service.ChatMessageService
+
+@Controller
+class ChatWsController {
+
+    @Autowired
+    private lateinit var chatMessageService: ChatMessageService
+
+    private val logger: Logger = LoggerFactory.getLogger(this.javaClass)
+
+    @MessageMapping("/chat")
+    @SendTo("/topic/messages")
+    fun send(@Payload message: ChatMessage, auth: Authentication): ChatMessageOutput {
+        val outMessage =  ChatMessageOutput(message.body, auth.principal as String)
+        chatMessageService.addMessage(outMessage)
+        return outMessage
+    }
+
+
+}

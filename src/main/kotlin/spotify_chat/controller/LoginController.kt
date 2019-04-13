@@ -1,11 +1,14 @@
 package spotify_chat.controller
 
 import com.wrapper.spotify.model_objects.credentials.AuthorizationCodeCredentials
+import org.slf4j.Logger
+import org.slf4j.LoggerFactory
 import org.springframework.beans.factory.annotation.Autowired
 import org.springframework.http.HttpStatus
-import org.springframework.http.MediaType
 import org.springframework.http.ResponseEntity
+import org.springframework.security.core.context.SecurityContextHolder
 import org.springframework.web.bind.annotation.*
+import spotify_chat.authentication.SpotifyAuthentication
 import spotify_chat.domain.AccessTokenLifetime
 import spotify_chat.domain.AuthorizationCode
 import spotify_chat.service.SpotifyService
@@ -23,6 +26,8 @@ class LoginController {
 
     @Autowired
     private lateinit var spotifySession: SpotifySession
+
+    private val logger: Logger = LoggerFactory.getLogger(this::class.java)
 
     @GetMapping("login")
     fun login(response: HttpServletResponse) {
@@ -43,7 +48,11 @@ class LoginController {
     fun authenticate(@RequestBody authorization: AuthorizationCode): AccessTokenLifetime {
         val authorizationCode = authorization.authorizationCode
         val credentials: AuthorizationCodeCredentials =  spotifyService.getUserAccessToken(authorizationCode)
+        val profileData = spotifyService.getProfile(credentials.accessToken)
+
         spotifySession.update(credentials)
+        // authenticate user
+        SecurityContextHolder.getContext().authentication = SpotifyAuthentication(profileData.id, credentials.accessToken)
 
         return AccessTokenLifetime(spotifySession.getTokenLifeTimeSeconds(), "seconds")
     }

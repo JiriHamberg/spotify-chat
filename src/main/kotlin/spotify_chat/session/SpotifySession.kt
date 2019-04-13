@@ -1,6 +1,7 @@
 package spotify_chat.session
 
 import com.wrapper.spotify.model_objects.credentials.AuthorizationCodeCredentials
+import com.wrapper.spotify.model_objects.specification.User
 import org.springframework.context.annotation.ScopedProxyMode
 import org.springframework.stereotype.Component
 import org.springframework.web.context.annotation.SessionScope
