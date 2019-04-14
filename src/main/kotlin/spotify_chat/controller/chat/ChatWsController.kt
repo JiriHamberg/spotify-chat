@@ -11,6 +11,7 @@ import org.springframework.stereotype.Controller
 import spotify_chat.domain.chat.ChatMessage
 import spotify_chat.domain.chat.ChatMessageOutput
 import spotify_chat.service.ChatMessageService
+import java.util.*
 
 @Controller
 class ChatWsController {
@@ -23,7 +24,7 @@ class ChatWsController {
     @MessageMapping("/chat")
     @SendTo("/topic/messages")
     fun send(@Payload message: ChatMessage, auth: Authentication): ChatMessageOutput {
-        val outMessage =  ChatMessageOutput(message.body, auth.principal as String)
+        val outMessage =  ChatMessageOutput(UUID.randomUUID().toString(), message.body, auth.principal as String)
         chatMessageService.addMessage(outMessage)
         return outMessage
     }
