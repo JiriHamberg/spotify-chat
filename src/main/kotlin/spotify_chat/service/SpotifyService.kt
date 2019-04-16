@@ -41,6 +41,8 @@ class SpotifyService {
 
     @PostConstruct
     private fun postConstruct() {
+        logger.info("Using redirect URI $clientRedirectUri")
+
         spotifyApi = SpotifyApi.builder()
             .setClientId(clientId)
             .setClientSecret(clientSecret)

@@ -1,5 +1,6 @@
 package spotify_chat.config
 
+import org.slf4j.LoggerFactory
 import org.springframework.beans.factory.annotation.Value
 import org.springframework.context.annotation.Configuration
 import org.springframework.security.config.annotation.method.configuration.EnableGlobalMethodSecurity
@@ -7,10 +8,11 @@ import org.springframework.security.config.annotation.web.builders.HttpSecurity
 import org.springframework.security.config.annotation.web.configuration.EnableWebSecurity
 import org.springframework.security.config.annotation.web.configuration.WebSecurityConfigurerAdapter
 import org.springframework.security.web.access.channel.ChannelProcessingFilter
-import javax.servlet.Filter
-import javax.servlet.FilterChain
-import javax.servlet.ServletRequest
-import javax.servlet.ServletResponse
+import org.springframework.security.web.context.SecurityContextPersistenceFilter
+import org.springframework.web.filter.GenericFilterBean
+import java.io.IOException
+import javax.servlet.*
+import javax.servlet.http.HttpServletRequest
 import javax.servlet.http.HttpServletResponse
 
 @Configuration
@@ -27,8 +29,8 @@ class SecurityConfig : WebSecurityConfigurerAdapter() {
 
     override fun configure(http: HttpSecurity?) {
         http?.httpBasic()?.disable()
-        http?.csrf()?.disable()
-        http?.addFilterBefore(WebSecurityCorsFilter(frontendHost), ChannelProcessingFilter::class.java)
+            ?.csrf()?.disable()
+            ?.addFilterBefore(WebSecurityCorsFilter(frontendHost), ChannelProcessingFilter::class.java)
     }
 }
 
@@ -40,7 +42,7 @@ class WebSecurityCorsFilter(val corsOrigin: String) : Filter {
         res.setHeader("Access-Control-Allow-Methods", "GET, POST, PUT, DELETE, OPTIONS")
         res.setHeader("Access-Control-Max-Age", "3600")
         res.setHeader("Access-Control-Allow-Credentials", "true")
-        res.setHeader("Access-Control-Allow-Headers", "Authorization, Content-Type, Accept, x-requested-with, Cache-Control")
+        res.setHeader("Access-Control-Allow-Headers", "Authorization, Content-Type, Accept, x-requested-with, Cache-Control, User, Cookie")
         chain?.doFilter(request, res)
     }
 }
