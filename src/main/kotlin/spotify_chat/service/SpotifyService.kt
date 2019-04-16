@@ -16,6 +16,7 @@ import org.springframework.stereotype.Component
 import javax.annotation.PostConstruct
 import com.wrapper.spotify.requests.authorization.authorization_code.AuthorizationCodeUriRequest
 import org.springframework.beans.factory.annotation.Autowired
+import org.springframework.scheduling.annotation.Scheduled
 import spotify_chat.session.SpotifySession
 import java.time.LocalDateTime
 import java.util.*
@@ -52,6 +53,18 @@ class SpotifyService {
         val clientCredentials = clientCredentialsRequest.execute()
         spotifyApi.accessToken = clientCredentials.accessToken
 
+    }
+
+
+    @Scheduled(fixedRateString = "\${spotify.client.tokenRefreshIntervalMillis}", initialDelayString = "\${spotify.client.tokenRefreshIntervalMillis}")
+    fun refreshClientAccessToken() {
+        logger.info("Refreshing client access token")
+
+        val clientCredentialsRequest = spotifyApi.clientCredentials()
+            .build()
+
+        val clientCredentials = clientCredentialsRequest.execute()
+        spotifyApi.accessToken = clientCredentials.accessToken
     }
 
 

@@ -24,7 +24,7 @@ class ChatWsController {
     @MessageMapping("/chat")
     @SendTo("/topic/messages")
     fun send(@Payload message: ChatMessage, auth: Authentication): ChatMessageOutput {
-        val outMessage =  ChatMessageOutput(UUID.randomUUID().toString(), message.body, auth.principal as String)
+        val outMessage = ChatMessageOutput(UUID.randomUUID().toString(), message.body, auth.principal as String)
         chatMessageService.addMessage(outMessage)
         return outMessage
     }
