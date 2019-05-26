@@ -6,10 +6,7 @@ import org.springframework.beans.factory.annotation.Autowired
 import org.springframework.context.ApplicationListener
 import org.springframework.messaging.simp.SimpMessagingTemplate
 import org.springframework.stereotype.Component
-import spotify_chat.domain.chat.ChatSubscriptionEvent
-import spotify_chat.domain.chat.ChatSubscriptionEventOutput
-import spotify_chat.domain.chat.EventType
-import spotify_chat.domain.chat.Subscribers
+import spotify_chat.domain.chat.*
 import java.util.concurrent.ConcurrentHashMap
 
 
@@ -65,8 +62,11 @@ class ChatSubscriberService: ApplicationListener<ChatSubscriptionEvent> {
 
     private fun sendSubscriptionEvent(userId: String, trackId: String, eventType: EventType) {
         val destination = "/topic/$trackId/subscriptions"
-        val payload = ChatSubscriptionEventOutput(userId, eventType)
-        messagingTemplate.convertAndSend(destination, payload)
+        val message = ChatSubscriptionEventOutput(userId, eventType)
+
+        logger.info("Broadcasting to $destination message ${message}")
+
+        messagingTemplate.convertAndSend(destination, message)
     }
 
 

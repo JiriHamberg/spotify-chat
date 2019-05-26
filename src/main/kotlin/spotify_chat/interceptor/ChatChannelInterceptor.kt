@@ -45,6 +45,7 @@ class ChatChannelInterceptor : ChannelInterceptor, ApplicationEventPublisherAwar
             StompCommand.SUBSCRIBE -> handleSubscribe(principal, destination, subscriptionId)
             StompCommand.UNSUBSCRIBE -> handleUnsubscribe(principal, subscriptionId)
             StompCommand.DISCONNECT -> handleDisconnect(principal)
+            else -> Unit
         }
 
         return message
