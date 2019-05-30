@@ -60,9 +60,6 @@ class WebSocketConfig : WebSocketMessageBrokerConfigurer {
         registry.addEndpoint("/chat")
             .setAllowedOrigins(frontEndUrl)
             .addInterceptors(HttpSessionHandshakeInterceptor())
-        registry.addEndpoint("/chat")
-            .setAllowedOrigins(frontEndUrl)
-            .addInterceptors(HttpSessionHandshakeInterceptor())
             .withSockJS()
     }
 
