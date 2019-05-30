@@ -23,7 +23,7 @@ class ChatWsController {
     private val logger: Logger = LoggerFactory.getLogger(this::class.java)
 
     @MessageMapping("/chat/{trackId}")
-    @SendTo("/topic/{trackId}/messages")
+    @SendTo("/topic/{trackId}.messages")
     fun send(@DestinationVariable("trackId") trackId: String, @Payload message: ChatMessage, auth: Authentication): ChatMessageOutput {
         val message = ChatMessageOutput(UUID.randomUUID().toString(), message.body, auth.principal as String)
         chatMessageService.addMessage(trackId, message)

@@ -39,6 +39,7 @@ dependencies {
 
     compile "org.springframework.boot:spring-boot-starter-websocket"
     compile "org.springframework.boot:spring-boot-starter-security"
+    compile "org.springframework.boot:spring-boot-starter-reactor-netty"
 
     compile group: 'org.springframework.session', name: 'spring-session-jdbc', version: '2.1.4.RELEASE'
     compile group: 'com.h2database', name: 'h2', version: '1.4.198'

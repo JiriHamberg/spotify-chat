@@ -61,7 +61,7 @@ class ChatSubscriberService: ApplicationListener<ChatSubscriptionEvent> {
 
 
     private fun sendSubscriptionEvent(userId: String, trackId: String, eventType: EventType) {
-        val destination = "/topic/$trackId/subscriptions"
+        val destination = "/topic/$trackId.subscriptions"
         val message = ChatSubscriptionEventOutput(userId, eventType)
 
         logger.info("Broadcasting to $destination message ${message}")

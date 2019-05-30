@@ -23,13 +23,37 @@ class WebSocketConfig : WebSocketMessageBrokerConfigurer {
     @Value("\${spotify_chat.frontend.url}")
     private lateinit var frontEndUrl: String
 
+    @Value("\${spotify_chat.messaging.stomp.relay.host}")
+    private lateinit var relayHost: String
+
+    @Value("\${spotify_chat.messaging.stomp.relay.port}")
+    private lateinit var relayPort: Integer
+
+    @Value("\${spotify_chat.messaging.stomp.relay.username}")
+    private lateinit var relayUsername: String
+
+    @Value("\${spotify_chat.messaging.stomp.relay.password}")
+    private lateinit var relayPassword: String
+
+    @Value("\${spotify_chat.messaging.stomp.relay.virtualHost}")
+    private lateinit var relayVirtualHost: String
+
     @Autowired
     private lateinit var chatChannelInterceptor: ChatChannelInterceptor
 
 
     override fun configureMessageBroker(config: MessageBrokerRegistry) {
-        config.enableSimpleBroker("/topic")
         config.setApplicationDestinationPrefixes("/app")
+
+        val stompBrokerRegistration = config.enableStompBrokerRelay("/topic")
+            .setRelayHost(relayHost)
+            .setRelayPort(relayPort.toInt())
+            .setClientLogin(relayUsername)
+            .setClientPasscode(relayPassword)
+
+        if(relayVirtualHost.isNotEmpty()) {
+            stompBrokerRegistration.setVirtualHost(relayVirtualHost)
+        }
     }
 
     override fun registerStompEndpoints(registry: StompEndpointRegistry) {
