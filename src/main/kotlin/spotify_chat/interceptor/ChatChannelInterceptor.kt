@@ -1,6 +1,7 @@
 package spotify_chat.interceptor
 
 import org.slf4j.LoggerFactory
+import org.springframework.beans.factory.annotation.Value
 import org.springframework.context.ApplicationEventPublisher
 import org.springframework.context.ApplicationEventPublisherAware
 import org.springframework.messaging.Message
@@ -13,10 +14,19 @@ import org.springframework.stereotype.Component
 import spotify_chat.domain.chat.ChatSubscriptionEvent
 import java.security.Principal
 import java.util.concurrent.ConcurrentHashMap
+import org.springframework.messaging.support.MessageBuilder
+import org.springframework.util.MultiValueMap
 
 
 @Component
 class ChatChannelInterceptor : ChannelInterceptor, ApplicationEventPublisherAware {
+
+    @Value("\${spotify_chat.messaging.stomp.relay.username}")
+    private lateinit var relayUsername: String
+
+    @Value("\${spotify_chat.messaging.stomp.relay.password}")
+    private lateinit var relayPassword: String
+
 
     private lateinit var publisher: ApplicationEventPublisher
 
@@ -41,6 +51,12 @@ class ChatChannelInterceptor : ChannelInterceptor, ApplicationEventPublisherAwar
 
         //logger.info(chatSubscriptions.toString())
 
+        if(headerAccessor.command == StompCommand.STOMP) {
+            return handleConnect(message, StompCommand.STOMP)
+        } else if (headerAccessor.command == StompCommand.CONNECT) {
+            return handleConnect(message, StompCommand.CONNECT)
+        }
+
         when(headerAccessor.command) {
             StompCommand.SUBSCRIBE -> handleSubscribe(principal, destination, subscriptionId)
             StompCommand.UNSUBSCRIBE -> handleUnsubscribe(principal, subscriptionId)
@@ -49,6 +65,24 @@ class ChatChannelInterceptor : ChannelInterceptor, ApplicationEventPublisherAwar
         }
 
         return message
+    }
+
+
+    /**
+     * Override STOMP login and passcode to use server credentials - authentication is done using spring session
+     */
+    private fun handleConnect(message: Message<*>, command: StompCommand): Message<*> {
+        val headerAccessor = StompHeaderAccessor.wrap(message)
+
+        val accessor = StompHeaderAccessor.create(command)
+        accessor.setAcceptVersion(headerAccessor.version)
+        accessor.sessionId = headerAccessor.sessionId
+        accessor.login = relayUsername
+        accessor.passcode = relayPassword
+
+        logger.info("Message intercepted, setting login to ${accessor.login}")
+
+        return MessageBuilder.createMessage(ByteArray(0), accessor.messageHeaders)
     }
 
 
