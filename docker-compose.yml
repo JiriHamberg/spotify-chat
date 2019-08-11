@@ -1,7 +1,18 @@
 version: '2'
 services:
+  spotify-chat-api:
+    container_name: spotify-chat-backend
+    build: .
+    env_file:
+      - .env
+    depends_on:
+      - rabbitmq
+    ports:
+      - 8080:8080
+
   rabbitmq:
     image: ruddell/docker-rabbitmq-stomp:latest
+    container_name: rabbitmq
       # optional rabbitmq configuration variables
       # environment:
       # for securing connections to rabbitmq
@@ -13,4 +24,16 @@ services:
       # the management port
       - 15672:15672
       # the stomp port
-      - 61613:61613
+      # - 61613:61613
+
+  ui:
+    build: spotify-chat-ui
+    container_name: spotify-chat-ui
+    depends_on:
+      - spotify-chat-api
+    ports:
+      - 3000:3000
+    environment:
+      REACT_APP_BACKEND_LOGIN_URL: http://localhost:8080/api/v1/login
+      REACT_APP_BACKEND_BASEPATH: http://localhost:8080/api/v1
+      REACT_APP_BACKEND_HOST: http://localhost:8080

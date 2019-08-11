@@ -1,0 +1,3 @@
+[submodule "spotify-chat-ui"]
+	path = spotify-chat-ui
+	url = https://github.com/Piia/spotify-chat-ui.git
