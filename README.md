@@ -27,7 +27,7 @@ STOMP_RELAY_VIRTUAL_HOST=
 # Build
 `git submodule update --init --recursive`
 
-`docker-compuse build`
+`docker-compose build`
 
 # Run
 `docker-compose up`
