@@ -1,4 +1,5 @@
 #!/bin/sh
 
-docker-compose up -d
-export $(cat .env | xargs) && ./gradlew bootRun
+docker-compose build spotify-chat-api
+docker-compose up
+#export $(cat .env | xargs) && ./gradlew bootRun

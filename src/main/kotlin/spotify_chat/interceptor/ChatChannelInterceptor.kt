@@ -32,7 +32,7 @@ class ChatChannelInterceptor : ChannelInterceptor, ApplicationEventPublisherAwar
 
     private val logger = LoggerFactory.getLogger(this::class.java)
 
-    private val chatMessagesChannelRe = "/topic/([a-zA-Z1-9]+)/messages".toRegex()
+    private val chatMessagesChannelRe = "/topic/([a-zA-Z1-9]+)\\.messages".toRegex()
 
     // principalName -> (subscription -> trackId) mapping
     private val chatSubscriptions: ConcurrentHashMap<String, ConcurrentHashMap<String, String>> = ConcurrentHashMap()
@@ -87,6 +87,9 @@ class ChatChannelInterceptor : ChannelInterceptor, ApplicationEventPublisherAwar
 
 
     private fun handleSubscribe(principal: Principal, destination: String, subscriptionId: String) {
+
+        logger.info("handleSubscribe: principal=$principal destination=$destination")
+
         chatMessagesChannelRe.matchEntire(destination)?.let { match ->
             val (trackId) = match.destructured
 
@@ -100,6 +103,8 @@ class ChatChannelInterceptor : ChannelInterceptor, ApplicationEventPublisherAwar
                     value
                 }
             }
+
+            logger.info(chatSubscriptions.toString())
 
             val subscriptionEvent = ChatSubscriptionEvent.Subscribe(this, principal, trackId)
             publisher.publishEvent(subscriptionEvent)
